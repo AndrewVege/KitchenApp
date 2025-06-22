@@ -161,18 +161,7 @@
     const form          = document.getElementById("contactForm");
     const feedback      = document.getElementById("contactFeedback");
 
-    // 1) Funkcja do zapisu stanu w LocalStorage
-    function saveState() {
-    localStorage.setItem("kuchniaQuote", JSON.stringify({
-      cabinets,
-      front: frontSel.value,
-      blat:  blatSel.value,
-      led:   ledChk.checked,
-      lower: lowerChk.checked,
-      island: islandChk.checked
-    }));
-    }
-
+   
     // ---- populate ----
     function populateGroups() {
       groupSelect.innerHTML = "";
@@ -280,18 +269,7 @@
 
     // ---- inicjalizacja i eventy ----
     document.addEventListener("DOMContentLoaded", ()=>{
-      const saved = JSON.parse(localStorage.getItem("kuchniaQuote") || "null");
-    if (saved) {
-      cabinets = saved.cabinets || [];
-      frontSel.value  = saved.front  || frontSel.value;
-      blatSel.value   = saved.blat   || blatSel.value;
-      ledChk.checked  = !!saved.led;
-      lowerChk.checked= !!saved.lower;
-      islandChk.checked= !!saved.island;
-      populateGroups();      // odświeża grupy i itemy
-      renderList();          // odtwarza listę
-      renderSummary();       // odtwarza podsumowanie
-    } else {
+     
       // stan pusty – normalna inicjalizacja
       populateGroups();
       renderList();
