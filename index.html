@@ -206,8 +206,9 @@
       const costBlat   = pozLen * BLAT_COSTS[blatSel.value]
                        + wyspaLen * BLAT_COSTS[blatSel.value] * (1000/600);
       const costLed    = ledChk.checked ? cabinets.filter(c=>c.group==="wiszace").length*100 : 0;
-      const costLower  = lowerChk.checked ? BOK_COST : 0;
-      const costIsland = islandChk.checked ? 2*BOK_COST : 0;
+      const panelUnitPrice = BLAT_COSTS[blatSel.value] || 0;
+      const costLower  = lowerChk.checked ? panelUnitPrice : 0;
+      const costIsland = islandChk.checked ? panelUnitPrice * 2 : 0;
       const montBase   = costSzaf * MONTAGE_PERCENT;
       const costMont   = montBase < MONTAGE_MIN ? MONTAGE_MIN : montBase;
       const total      = costSzaf + frontExtra + costBlat + costLed
