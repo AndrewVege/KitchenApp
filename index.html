@@ -136,6 +136,11 @@
     const BOK_COST           = 300;
     const MONTAGE_PERCENT    = 0.15;
     const MONTAGE_MIN        = 1500;
+    const LOWER_DEPTH    = 0.6;  // m
+    const LOWER_HEIGHT   = 0.72; // m
+    const UPPER_DEPTH    = 0.3;  // m
+    const UPPER_HEIGHT   = 0.6;  // m
+    const COLUMN_VOLUME  = 0.8;  // m3 per słupek
 
     let cabinets = [];
 
@@ -201,6 +206,34 @@
         .reduce((s,c)=>s + (c.length||0)*c.qty,0);
       const pozLen = totalLen - wyspaLen;
 
+      // 1) obliczenie objętości na podstawie wszystkich szafek:
+      const totalVolume = cabinets.reduce((sum, c) => {
+        if (c.group === "dolne" || c.group === "wyspa") {
+          // długość (m) × głębokość × wysokość × ilość
+          return sum + (c.length || 0) * LOWER_DEPTH * LOWER_HEIGHT * c.qty;
+        }
+        if (c.group === "wiszace") {
+          return sum + (c.length || 0) * UPPER_DEPTH * UPPER_HEIGHT * c.qty;
+        }
+        if (c.group === "slupki") {
+          // słupek jest liczone na sztuki, a nie wg długości
+          return sum + COLUMN_VOLUME * c.qty;
+        }
+        return sum;
+      }, 0);
+
+      // 2) wycena transportu wg objętości:
+      const baseFee    = 200;          // opłata podstawowa
+      const freeVolume = 2;            // m3 w podstawie
+      const extraRate  = 100;          // zł/m3 powyżej freeVolume
+      
+      const extraVolume = Math.max(0, totalVolume - freeVolume);
+      const transportCost = baseFee + extraVolume * extraRate;
+      
+      // 3) odejmij stały TRANSPORT_COST i podstaw go transportCost
+      // zamiast stałej użyj:
+      const transportFinal = transportCost;
+
       const costSzaf   = cabinets.reduce((s,c)=>s + c.price*c.qty,0);
       const frontExtra = costSzaf * (FRONT_MULTIPLIERS[frontSel.value] - 1);
       const costBlat   = pozLen * BLAT_COSTS[blatSel.value]
@@ -221,7 +254,7 @@
         <p>Dopłata za fronty: <strong>${frontExtra.toFixed(2)} zł</strong></p>
         <p>Koszt blatów: <strong>${costBlat.toFixed(2)} zł</strong></p>
         <p>Koszt LED: <strong>${costLed.toFixed(2)} zł</strong></p>
-        <p>Transport: <strong>${TRANSPORT_COST} zł</strong></p>
+        <p>Transport (opłata podstawowa ${baseFee} zł + ${extraRate} zł/m³ nadwyżki): <strong>${transportFinal.toFixed(2)} zł</strong></p>
         <p>Montaż (15%, min ${MONTAGE_MIN} zł): <strong>${costMont.toFixed(2)} zł</strong></p>
         <p>Bok dolny: <strong>${costLower.toFixed(2)} zł</strong></p>
         <p>Boki wyspy: <strong>${costIsland.toFixed(2)} zł</strong></p>
