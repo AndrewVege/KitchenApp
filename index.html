@@ -44,6 +44,7 @@
       <div>
         <label class="block mb-1 font-medium">Rodzaj blatu</label>
         <select id="blatSelect" class="w-full border rounded p-2 focus:ring-2 focus:ring-blue-300">
+          <option value="none">Bez blatu</option>
           <option value="laminat">Laminat</option>
           <option value="kompaktowy">Kompaktowy</option>
           <option value="kamien">Kamień</option>
@@ -132,7 +133,7 @@
       }
     };
     const FRONT_MULTIPLIERS = { laminowane: 1, lakierowane: 1.2, frezowane: 1.35 };
-    const BLAT_COSTS        = { laminat: 250, kompaktowy: 600, kamien: 1800, drewniany: 1200 };
+    const BLAT_COSTS        = { laminat: 250, kompaktowy: 600, kamien: 1800, drewniany: 1200, none: 0 };
     const TRANSPORT_COST     = 400;
     const BOK_COST           = 300;
     const MONTAGE_PERCENT    = 0.15;
