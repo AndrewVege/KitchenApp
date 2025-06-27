@@ -311,18 +311,16 @@ let costBlat;
       const costIsland = islandChk.checked ? panelUnitPrice * 2 : 0;
       const montBase   = costSzaf * MONTAGE_PERCENT;
       const costMont   = montBase < MONTAGE_MIN ? MONTAGE_MIN : montBase;
-     const totalBase = costSzaf + frontExtra + costBlat + costLed
-                + transportCost + costMont + costLower + costIsland;
-    const total     = totalBase + cutoutCost;
-
+      const totalBase = costSzaf + frontExtra + costBlat + costLed
+                  + transportCost + costMont + costLower + costIsland;
+      const total     = totalBase + cutoutCost;
       summaryEl.innerHTML = `
         <p>Długość blatów (pozostała): <strong>${pozLen.toFixed(2)} m</strong></p>
         <p>Długość blatów (wyspa): <strong>${wyspaLen.toFixed(2)} m</strong></p>
         <p>Koszt szafek: <strong>${costSzaf.toFixed(2)} zł</strong></p>
         <p>Dopłata za fronty: <strong>${frontExtra.toFixed(2)} zł</strong></p>
         <p>Koszt blatów: <strong>${costBlat.toFixed(2)} zł</strong></p>
-        <p>Koszt wycięć (zlew/płyta): <strong>${cutoutCost.toFixed(2)} zł</strong></p>
-        
+        ${cutoutCost > 0 ? <p>Koszt wycięć (zlew/płyta): <strong>${cutoutCost.toFixed(2)} zł</strong></p>
         <p>Koszt LED: <strong>${costLed.toFixed(2)} zł</strong></p>
         <p>Transport (opłata podstawowa ${baseFee} zł + ${extraRate} zł/m³ nadwyżki): <strong>${transportFinal.toFixed(2)} zł</strong></p>
         <p>Montaż (15%, min ${MONTAGE_MIN} zł): <strong>${costMont.toFixed(2)} zł</strong></p>
