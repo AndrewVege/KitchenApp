@@ -93,6 +93,10 @@
 
   <script>
     // ---- dane i stałe ----
+
+    const OVEN_KEYS = ["slupek", "mikrofalapiekarnik"];
+    const SINK_KEY = ["zlew", "zlewClassic"];
+    
     const CABINET_GROUPS = {
       dolne: {
         label: "Szafki dolne",
@@ -357,13 +361,37 @@ let costBlat;
       renderList();
       renderSummary();
 
-      addBtn.onclick = ()=>{
+      /*
+      
+        addBtn.onclick = ()=>{
         const key = itemSelect.value;
         const item = CABINET_GROUPS[groupSelect.value].items[key];
        // cabinets.push({ ...item, group: groupSelect.value, qty: 1 });
         cabinets.push({ key, ...item, group: groupSelect.value, qty: 1 });
         renderList(); renderSummary();
       };
+      */
+
+      addBtn.onclick = () => {
+        const key = itemSelect.value;
+        const item = CABINET_GROUPS[groupSelect.value].items[key];
+      
+        // 1) Ostrzeżenie jeśli ktoś już dodał „zlew”
+        if (key === SINK_KEY && cabinets.some(c => c.key === SINK_KEY)) {
+          alert("Uwaga: już masz w wycenie szafkę pod zlew. Jeśli naprawdę potrzebujesz dwóch, możesz dodać kolejną.");
+        }
+      
+        // 2) Ostrzeżenie jeśli ktoś już dodał któryś ze słupków
+        if (OVEN_KEYS.includes(key) && cabinets.some(c => OVEN_KEYS.includes(c.key))) {
+          alert("Uwaga: już masz w wycenie wysoką zabudowę (słupek z piekarnikiem lub mikrofalą). Jeśli potrzebujesz dwóch, możesz dodać kolejną.");
+        }
+      
+        // 3) Dodajemy niezależnie od ostrzeżeń
+        cabinets.push({ key, ...item, group: groupSelect.value, qty: 1 });
+        renderList();
+        renderSummary();
+    };
+      
       groupSelect.onchange = ()=>{
         populateItems();
       };
