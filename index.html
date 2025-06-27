@@ -161,7 +161,13 @@
     const form          = document.getElementById("contactForm");
     const feedback      = document.getElementById("contactFeedback");
 
-   
+
+    const CUTOUT_COSTS = {
+      zlew:       200,  // otwór pod zlew – 200 zł/szt
+      "3-szuflady":200   // otwór pod płytę/grzałkę – 150 zł/szt
+    };  
+
+    
     // ---- populate ----
     function populateGroups() {
       groupSelect.innerHTML = "";
@@ -268,6 +274,8 @@
       // const costBlat   = pozLen * BLAT_COSTS[blatSel.value]
      //                  + wyspaLen * BLAT_COSTS[blatSel.value] * (1000/600);
 
+
+      
 let costBlat;
   if (blatSel.value === "kompaktowy") {
     // potrzebna długość całkowita (w metrach)
@@ -281,6 +289,13 @@ let costBlat;
     const unit = BLAT_COSTS[blatSel.value] || 0;
     costBlat = pozLen * unit + wyspaLen * unit * (1000/600);
   }
+
+// 3) koszt wycięć
+const cutoutCost = cabinets.reduce((sum, c) => {
+  return sum + (CUTOUT_COSTS[c.key] || 0) * c.qty;
+}, 0);
+
+      
       
       const costLed    = ledChk.checked ? cabinets.filter(c=>c.group==="wiszace").length*100 : 0;
       const panelUnitPrice = BLAT_COSTS[blatSel.value] || 0;
@@ -288,8 +303,9 @@ let costBlat;
       const costIsland = islandChk.checked ? panelUnitPrice * 2 : 0;
       const montBase   = costSzaf * MONTAGE_PERCENT;
       const costMont   = montBase < MONTAGE_MIN ? MONTAGE_MIN : montBase;
-      const total      = costSzaf + frontExtra + costBlat + costLed
-                       + TRANSPORT_COST + costMont + costLower + costIsland;
+     const totalBase = costSzaf + frontExtra + costBlat + costLed
+                + transportCost + costMont + costLower + costIsland;
+    const total     = totalBase + cutoutCost;
 
       summaryEl.innerHTML = `
         <p>Długość blatów (pozostała): <strong>${pozLen.toFixed(2)} m</strong></p>
@@ -297,6 +313,11 @@ let costBlat;
         <p>Koszt szafek: <strong>${costSzaf.toFixed(2)} zł</strong></p>
         <p>Dopłata za fronty: <strong>${frontExtra.toFixed(2)} zł</strong></p>
         <p>Koszt blatów: <strong>${costBlat.toFixed(2)} zł</strong></p>
+        <p>Koszt wycięć (zlew/płyta): <strong>${cutoutCost.toFixed(2)} zł</strong></p>
+        <hr class="my-2"/>
+        <p class="text-lg font-bold">
+          Razem: ${(total + cutoutCost).toFixed(2)} zł
+        </p>
         <p>Koszt LED: <strong>${costLed.toFixed(2)} zł</strong></p>
         <p>Transport (opłata podstawowa ${baseFee} zł + ${extraRate} zł/m³ nadwyżki): <strong>${transportFinal.toFixed(2)} zł</strong></p>
         <p>Montaż (15%, min ${MONTAGE_MIN} zł): <strong>${costMont.toFixed(2)} zł</strong></p>
@@ -318,7 +339,8 @@ let costBlat;
       addBtn.onclick = ()=>{
         const key = itemSelect.value;
         const item = CABINET_GROUPS[groupSelect.value].items[key];
-        cabinets.push({ ...item, group: groupSelect.value, qty: 1 });
+       // cabinets.push({ ...item, group: groupSelect.value, qty: 1 });
+        cabinets.push({ key, ...item, group: groupSelect.value, qty: 1 });
         renderList(); renderSummary();
       };
       groupSelect.onchange = ()=>{
