@@ -292,9 +292,16 @@ let costBlat;
   }
 
 // 3) koszt wycięć
-const cutoutCost = cabinets.reduce((sum, c) => {
-  return sum + (CUTOUT_COSTS[c.key] || 0) * c.qty;
-}, 0);
+//const cutoutCost = cabinets.reduce((sum, c) => {
+ // return sum + (CUTOUT_COSTS[c.key] || 0) * c.qty;
+//}, 0);
+
+  let cutoutCost = 0;
+  if (blatSel.value !== "none") {
+    cutoutCost = cabinets.reduce((sum, c) => {
+      return sum + (CUTOUT_COSTS[c.key] || 0) * c.qty;
+    }, 0);
+  }    
 
       
       
