@@ -264,8 +264,24 @@
 
       const costSzaf   = cabinets.reduce((s,c)=>s + c.price*c.qty,0);
       const frontExtra = costSzaf * (FRONT_MULTIPLIERS[frontSel.value] - 1);
-      const costBlat   = pozLen * BLAT_COSTS[blatSel.value]
-                       + wyspaLen * BLAT_COSTS[blatSel.value] * (1000/600);
+     // stara logika dla blatów
+      // const costBlat   = pozLen * BLAT_COSTS[blatSel.value]
+     //                  + wyspaLen * BLAT_COSTS[blatSel.value] * (1000/600);
+
+let costBlat;
+  if (blatSel.value === "kompaktowy") {
+    // potrzebna długość całkowita (w metrach)
+    const needed = pozLen + wyspaLen;
+    const slabLength = 4.10;     // każda płyta ma 4,10 m
+    const slabPrice  = 2500;     // cena każdej płyty
+    const slabsCount = Math.ceil(needed / slabLength) || 0;
+    costBlat = slabsCount * slabPrice;
+  } else {
+    // pozostałe materiały liczymy po mb
+    const unit = BLAT_COSTS[blatSel.value] || 0;
+    costBlat = pozLen * unit + wyspaLen * unit * (1000/600);
+  }
+      
       const costLed    = ledChk.checked ? cabinets.filter(c=>c.group==="wiszace").length*100 : 0;
       const panelUnitPrice = BLAT_COSTS[blatSel.value] || 0;
       const costLower  = lowerChk.checked ? panelUnitPrice : 0;
