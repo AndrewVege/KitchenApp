@@ -162,10 +162,16 @@
     const feedback      = document.getElementById("contactFeedback");
 
 
-    const CUTOUT_COSTS = {
+    const CUTOUT_COSTS_HIGH = {
       zlewClassic: 200, // otór pod zlew  
       zlew:       200,  // otwór pod zlew 
       "3-szuflady":200   // otwór pod płytę/grzałkę 
+    };  
+
+    const CUTOUT_COSTS_LOW = {
+      zlewClassic: 100, // otór pod zlew  
+      zlew:       100,  // otwór pod zlew 
+      "3-szuflady":100    // otwór pod płytę/grzałkę 
     };  
 
     
@@ -292,17 +298,26 @@ let costBlat;
   }
 
 // 3) koszt wycięć
-//const cutoutCost = cabinets.reduce((sum, c) => {
- // return sum + (CUTOUT_COSTS[c.key] || 0) * c.qty;
-//}, 0);
+/*const cutoutCost = cabinets.reduce((sum, c) => {
+ return sum + (CUTOUT_COSTS[c.key] || 0) * c.qty;
+}, 0);
 
-  let cutoutCost = 0;
+ let cutoutCost = 0;
   if (blatSel.value !== "none") {
     cutoutCost = cabinets.reduce((sum, c) => {
       return sum + (CUTOUT_COSTS[c.key] || 0) * c.qty;
     }, 0);
-  }    
-
+  }*/    
+  let cutoutCost = 0;
+      if (blatSel.value !== "none") {
+        // wybieramy mapę cen w zależności od materiału
+        const isHigh = ["kamien", "kompaktowy"].includes(blatSel.value);
+        const priceMap = isHigh ? CUTOUT_COSTS_HIGH : CUTOUT_COSTS_LOW;
+      
+        cutoutCost = cabinets.reduce((sum, c) => {
+          return sum + (priceMap[c.key] || 0) * c.qty;
+        }, 0);
+      }
       
       
       const costLed    = ledChk.checked ? cabinets.filter(c=>c.group==="wiszace").length*100 : 0;
