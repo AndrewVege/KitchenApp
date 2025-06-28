@@ -149,8 +149,8 @@
     const MONTAGE_MIN        = 1500;
     const LOWER_DEPTH    = 0.6;  // m
     const LOWER_HEIGHT   = 0.72; // m
-    const UPPER_DEPTH    = 0.3;  // m
-    const UPPER_HEIGHT   = 0.6;  // m
+    const UPPER_DEPTH    = 0.6;  // m
+    const UPPER_HEIGHT   = 0.8;  // m
     const COLUMN_VOLUME  = 0.8;  // m3 per słupek
 
     let cabinets = [];
@@ -200,53 +200,7 @@
       });
     }
 
-    /* ---- render list old ----
-   function renderList() {
-  listEl.innerHTML = "";
-
-  if (cabinets.length === 0) {
-    listEl.innerHTML = `<li class="text-gray-500 italic">Brak dodanych szafek</li>`;
-    return;
-  }
-
-  cabinets.forEach((c, i) => {
-    const li = document.createElement("li");
-    // flex + wyrównanie pionowe w środku + odstęp między elementami
-    li.className = "flex items-center gap-4";
-
-    // 1) nazwa, flex-1 żeby wypełniała całą dostępną szerokość
-    const name = document.createElement("span");
-    name.className = "flex-1";
-    name.textContent = c.name;
-
-    // 2) input z ilością, stała szerokość, wyśrodkowany tekst
-    const qty = document.createElement("input");
-    qty.type = "number";
-    qty.min = 1;
-    qty.value = c.qty;
-    qty.className = "w-16 text-center border rounded p-1";
-    qty.onchange = e => {
-      const v = parseInt(e.target.value) || 1;
-      c.qty = v < 1 ? 1 : v;
-      e.target.value = c.qty;
-      renderSummary();
-    };
-
-    // 3) przycisk usuń
-    const btn = document.createElement("button");
-    btn.className = "text-red-600 hover:text-red-800";
-    btn.textContent = "Usuń";
-    btn.onclick = () => {
-      cabinets.splice(i, 1);
-      renderList();
-      renderSummary();
-    };
-
-    li.append(name, qty, btn);
-    listEl.append(li);
-  });
-}
-*/
+   
 
 
 function renderList() {
