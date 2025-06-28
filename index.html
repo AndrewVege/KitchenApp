@@ -200,7 +200,7 @@
       });
     }
 
-    // ---- render list ----
+    /* ---- render list old ----
    function renderList() {
   listEl.innerHTML = "";
 
@@ -246,7 +246,74 @@
     listEl.append(li);
   });
 }
+*/
 
+
+function renderList() {
+  listEl.innerHTML = "";
+
+  // 1) Dynamiczne ostrzeżenia o duplikatach
+  const sinkCount = cabinets.filter(c => c.key === SINK_KEY).length;
+  if (sinkCount > 1) {
+    const warn = document.createElement("li");
+    warn.className = "text-yellow-700 italic px-2";
+    warn.textContent = "⚠ Uwaga: masz więcej niż jedną szafkę pod zlew.";
+    listEl.append(warn);
+  }
+
+  const ovenCount = cabinets.filter(c => OVEN_KEYS.includes(c.key)).length;
+  if (ovenCount > 1) {
+    const warn = document.createElement("li");
+    warn.className = "text-yellow-700 italic px-2";
+    warn.textContent = "⚠ Uwaga: masz więcej niż jeden słupek z piekarnikiem/mikrofalą.";
+    listEl.append(warn);
+  }
+
+  // 2) Jeśli nie ma żadnych szafek – komunikat
+  if (cabinets.length === 0) {
+    const empty = document.createElement("li");
+    empty.className = "text-gray-500 italic";
+    empty.textContent = "Brak dodanych szafek";
+    listEl.append(empty);
+    return;
+  }
+
+  // 3) Rysujemy każdą szafkę
+  cabinets.forEach((c, i) => {
+    const li = document.createElement("li");
+    li.className = "flex items-center gap-4";
+
+    const name = document.createElement("span");
+    name.className = "flex-1";
+    name.textContent = c.name;
+
+    const qty = document.createElement("input");
+    qty.type = "number"; qty.min = 1; qty.value = c.qty;
+    qty.className = "w-16 text-center border rounded p-1";
+    qty.onchange = e => {
+      let v = parseInt(e.target.value);
+      if (isNaN(v) || v < 1) v = 1;
+      c.qty = v; e.target.value = v;
+      renderSummary();
+      renderList(); // odśwież by ostrzeżenia się zaktualizowały
+    };
+
+    const btn = document.createElement("button");
+    btn.className = "text-red-600 hover:text-red-800";
+    btn.textContent = "Usuń";
+    btn.onclick = () => {
+      cabinets.splice(i, 1);
+      renderSummary();
+      renderList(); // odśwież listę i ostrzeżenia
+    };
+
+    li.append(name, qty, btn);
+    listEl.append(li);
+  });
+}
+
+
+    
     // ---- render summary ----
     function renderSummary(){
       const totalLen = cabinets.reduce((s,c)=>s + (c.length||0)*c.qty,0);
