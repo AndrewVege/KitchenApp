@@ -202,7 +202,7 @@
 
    
 
-
+/* old
 function renderList() {
   listEl.innerHTML = "";
 
@@ -252,6 +252,83 @@ function renderList() {
       renderList(); // odśwież by ostrzeżenia się zaktualizowały
     };
 
+    const btn = document.createElement("button");
+    btn.className = "text-red-600 hover:text-red-800";
+    btn.textContent = "Usuń";
+    btn.onclick = () => {
+      cabinets.splice(i, 1);
+      renderSummary();
+      renderList(); // odśwież listę i ostrzeżenia
+    };
+
+    li.append(name, qty, btn);
+    listEl.append(li);
+  });
+} */
+
+    function renderList() {
+  // 1) wyczyść listę
+  listEl.innerHTML = "";
+
+  // 2) ostrzeżenie: łączna ilość zlewów > 1?
+  const sinkQty = cabinets.reduce(
+    (sum, c) => SINK_KEYS.includes(c.key) ? sum + c.qty : sum,
+    0
+  );
+  if (sinkQty > 1) {
+    const warn = document.createElement("li");
+    warn.className = "text-yellow-700 italic px-2";
+    warn.textContent = "⚠ Uwaga: łączna ilość szafek pod zlew > 1.";
+    listEl.append(warn);
+  }
+
+  // 3) ostrzeżenie: łączna ilość słupków > 1?
+  const ovenQty = cabinets.reduce(
+    (sum, c) => OVEN_KEYS.includes(c.key) ? sum + c.qty : sum,
+    0
+  );
+  if (ovenQty > 1) {
+    const warn = document.createElement("li");
+    warn.className = "text-yellow-700 italic px-2";
+    warn.textContent = "⚠ Uwaga: łączna ilość słupków z piekarnikiem/mikrofalą > 1.";
+    listEl.append(warn);
+  }
+
+  // 4) gdy brak szafek – komunikat i koniec
+  if (cabinets.length === 0) {
+    const empty = document.createElement("li");
+    empty.className = "text-gray-500 italic";
+    empty.textContent = "Brak dodanych szafek";
+    listEl.append(empty);
+    return;
+  }
+
+  // 5) w przeciwnym razie – render każdej pozycji
+  cabinets.forEach((c, i) => {
+    const li = document.createElement("li");
+    li.className = "flex items-center gap-4";
+
+    // nazwa
+    const name = document.createElement("span");
+    name.className = "flex-1";
+    name.textContent = c.name;
+
+    // ilość
+    const qty = document.createElement("input");
+    qty.type = "number";
+    qty.min = 1;
+    qty.value = c.qty;
+    qty.className = "w-16 text-center border rounded p-1";
+    qty.onchange = e => {
+      let v = parseInt(e.target.value, 10);
+      if (isNaN(v) || v < 1) v = 1;
+      c.qty = v;
+      e.target.value = v;
+      renderSummary();
+      renderList(); // odśwież ostrzeżenia
+    };
+
+    // przycisk usuń
     const btn = document.createElement("button");
     btn.className = "text-red-600 hover:text-red-800";
     btn.textContent = "Usuń";
