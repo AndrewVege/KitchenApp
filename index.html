@@ -443,30 +443,15 @@ let costBlat;
       */
 
       addBtn.onclick = () => {
-        const key = itemSelect.value;
-        if (!key) return; // nic nie robimy, jeśli nie wybrano szafki
-      
-        // czy to duplikat zlewu?
-        if (key === SINK_KEY && cabinets.some(c => c.key === SINK_KEY)) {
-          window.alert(
-            "Uwaga: masz już w wycenie szafkę pod zlew. Jeśli potrzebujesz dwóch, możesz kontynuować."
-          );
-        }
-      
-        // czy to duplikat słupka (piekarnik / mikrofalapiekarnik)?
-        if (OVEN_KEYS.includes(key) && cabinets.some(c => OVEN_KEYS.includes(c.key))) {
-          window.alert(
-            "Uwaga: masz już wysoką zabudowę (słupek z piekarnikiem lub mikrofalą). Jeśli chcesz dwa, możesz kontynuować."
-          );
-        }
-      
-        // dodajemy szafkę z zachowaniem key
-        const item = CABINET_GROUPS[groupSelect.value].items[key];
-        cabinets.push({ key, ...item, group: groupSelect.value, qty: 1 });
-      
-        renderList();
-        renderSummary();
-      };
+  const key = itemSelect.value;
+  if (!key) return;
+
+  const item = CABINET_GROUPS[groupSelect.value].items[key];
+  cabinets.push({ key, ...item, group: groupSelect.value, qty: 1 });
+
+  renderList();
+  renderSummary();
+};
       
       groupSelect.onchange = ()=>{
         populateItems();
