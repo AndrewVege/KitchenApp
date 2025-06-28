@@ -253,7 +253,7 @@ function renderList() {
   listEl.innerHTML = "";
 
   // 1) Dynamiczne ostrzeżenia o duplikatach
-  const sinkCount = cabinets.filter(c => c.key === SINK_KEY).length;
+  const sinkCount = cabinets.filter(c => SINK_KEY.includes(c.key)).length;
   if (sinkCount > 1) {
     const warn = document.createElement("li");
     warn.className = "text-yellow-700 italic px-2";
