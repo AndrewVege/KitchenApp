@@ -386,7 +386,8 @@ let costBlat;
        ${cutoutCost > 0
       ? `<p>Koszt wycięć (zlew/płyta): <strong>${cutoutCost.toFixed(2)} zł</strong></p>`
       : ""}
-        <p>Koszt LED: <strong>${costLed.toFixed(2)} zł</strong></p>
+        //<p>Koszt LED: <strong>${costLed.toFixed(2)} zł</strong></p>
+        <p>Koszt LED (${ledQty} szt): <strong>${costLed.toFixed(2)} zł</strong></p>
         <p>Transport (opłata podstawowa ${baseFee} zł + ${extraRate} zł/m³ nadwyżki): <strong>${transportFinal.toFixed(2)} zł</strong></p>
         <p>Montaż (15%, min ${MONTAGE_MIN} zł): <strong>${costMont.toFixed(2)} zł</strong></p>
         <p>Bok dolny: <strong>${costLower.toFixed(2)} zł</strong></p>
