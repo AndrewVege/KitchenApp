@@ -396,7 +396,36 @@ let costBlat;
         <hr class="my-2"/>
         <p class="text-lg font-bold">Łącznie: ${total.toFixed(2)} zł</p>
       `;
+
+      <div class="flex justify-end mb-6">
+      <button id="pdfBtn"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
+      📄 Pobierz wycenę (PDF)
+      </button>
+      </div>
+
     }
+
+
+      document.getElementById("pdfBtn").onclick = () => {
+        // Pobieramy cały kontener z wyceną
+        const element = document.getElementById("app");
+      
+        // Konfiguracja html2pdf
+        const opt = {
+          margin:       [0.5, 0.5],        // marginesy w cm
+          filename:     "wycena_kuchni.pdf",
+          image:        { type: "jpeg", quality: 0.98 },
+          html2canvas:  { scale: 2 },      // większa rozdziałka
+          jsPDF:        { unit: "cm", format: "a4", orientation: "portrait" }
+        };
+      
+        // Generujemy i pobieramy
+        html2pdf().set(opt).from(element).save();
+      };
+
+
+    
 
     // ---- inicjalizacja i eventy ----
     document.addEventListener("DOMContentLoaded", ()=>{
@@ -442,5 +471,8 @@ let costBlat;
       };
     });
   </script>
+  <!-- CDN html2pdf -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 </body>
 </html>
