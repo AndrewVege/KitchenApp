@@ -362,7 +362,13 @@ let costBlat;
       }
       
       
-      const costLed    = ledChk.checked ? cabinets.filter(c=>c.group==="wiszace").length*100 : 0;
+      // oldLes const costLed    = ledChk.checked ? cabinets.filter(c=>c.group==="wiszace").length*100 : 0;
+      const ledQty = cabinets
+        .filter(c => c.group === "wiszace")
+        .reduce((sum, c) => sum + c.qty, 0);
+      const costLed = ledChk.checked
+        ? ledQty * 100
+        : 0;
       const panelUnitPrice = BLAT_COSTS[blatSel.value] || 0;
       const costLower  = lowerChk.checked ? panelUnitPrice : 0;
       const costIsland = islandChk.checked ? panelUnitPrice * 2 : 0;
