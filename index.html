@@ -407,6 +407,23 @@ let costBlat;
       `;
 }
 
+    document.getElementById("pdfBtn").onclick = () => {
+  // Pobieramy cały kontener z wyceną
+  const element = document.getElementById("app");
+
+  // Konfiguracja html2pdf
+  const opt = {
+    margin:       [0.5, 0.5],        // marginesy w cm
+    filename:     "wycena_kuchni.pdf",
+    image:        { type: "jpeg", quality: 0.98 },
+    html2canvas:  { scale: 2 },      // większa rozdziałka
+    jsPDF:        { unit: "cm", format: "a4", orientation: "portrait" }
+  };
+
+  // Generujemy i pobieramy
+  html2pdf().set(opt).from(element).save();
+};
+
        
 
 
@@ -448,6 +465,8 @@ let costBlat;
     });
   </script>
 
+<!-- CDN html2pdf -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 
 </body>
