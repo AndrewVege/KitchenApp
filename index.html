@@ -397,14 +397,7 @@ let costBlat;
         <p class="text-lg font-bold">Łącznie: ${total.toFixed(2)} zł</p>
       `;
 
-      <div class="flex justify-end mb-6">
-      <button id="pdfBtn"
-              class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
-        📄 Pobierz wycenę (PDF)
-      </button>
-      </div>
-
-
+     
     }
 
 
@@ -421,16 +414,7 @@ let costBlat;
       renderList();
       renderSummary();
 
-      /*
       
-        addBtn.onclick = ()=>{
-        const key = itemSelect.value;
-        const item = CABINET_GROUPS[groupSelect.value].items[key];
-       // cabinets.push({ ...item, group: groupSelect.value, qty: 1 });
-        cabinets.push({ key, ...item, group: groupSelect.value, qty: 1 });
-        renderList(); renderSummary();
-      };
-      */
 
       addBtn.onclick = () => {
   const key = itemSelect.value;
@@ -458,8 +442,7 @@ let costBlat;
     });
   </script>
 
-<!-- CDN html2pdf -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 
 </body>
 </html>
