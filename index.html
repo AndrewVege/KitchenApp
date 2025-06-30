@@ -95,6 +95,11 @@
         📄 Pobierz wycenę (PDF)
       </button>
     </div>
+    <!-- ===== kontener do PDF (niewidoczny na stronie) ===== -->
+<div id="pdfContent" class="hidden p-6 bg-white text-black" style="width:21cm;">
+  <!-- tu wleci disclaimer, dane kontaktowe, lista i tabela -->
+</div>
+
   </div>
 
 
@@ -409,19 +414,59 @@ let costBlat;
 
     document.getElementById("pdfBtn").onclick = () => {
   // Pobieramy cały kontener z wyceną
-  const element = document.getElementById("app");
+  document.getElementById("pdfBtn").onclick = () => {
+  const container = document.getElementById("pdfContent");
+  // 1) disclaimer + kontakt
+  container.innerHTML = `
+    <h1 style="text-align:center">Wycena kuchni</h1>
+    <p>Telefon kontaktowy: <strong>+48 123 456 789</strong></p>
+    <p style="font-style:italic; font-size:0.9em">
+      Uwaga: to wstępna wycena służąca jedynie oszacowaniu kosztów kuchni.
+    </p>
+    <hr/>
+    <h2>Wybrane szafki</h2>
+    <ul>
+      ${cabinets.map(c => `<li>${c.name} — ilość: ${c.qty}</li>`).join("")}
+    </ul>
+    <h2>Tabela kosztów</h2>
+    <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:0.9em">
+      <thead>
+        <tr>
+          <th align="left">Pozycja</th><th align="right">Kwota (zł)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Koszt szafek</td><td align="right">${costSzaf.toFixed(2)}</td></tr>
+        <tr><td>Dopłata za fronty</td><td align="right">${frontExtra.toFixed(2)}</td></tr>
+        <tr><td>Koszt blatów</td><td align="right">${costBlat.toFixed(2)}</td></tr>
+        <tr><td>Koszt LED</td><td align="right">${costLed.toFixed(2)}</td></tr>
+        <tr><td>Transport</td><td align="right">${transportCost.toFixed(2)}</td></tr>
+        <tr><td>Montaż</td><td align="right">${costMont.toFixed(2)}</td></tr>
+        <tr><td>Bok dolny</td><td align="right">${costLower.toFixed(2)}</td></tr>
+        <tr><td>Boki wyspy</td><td align="right">${costIsland.toFixed(2)}</td></tr>
+        ${cutoutCost > 0
+          ? `<tr><td>Koszt wycięć</td><td align="right">${cutoutCost.toFixed(2)}</td></tr>`
+          : ""}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th align="left">Razem</th>
+          <th align="right">${(totalBase + cutoutCost).toFixed(2)}</th>
+        </tr>
+      </tfoot>
+    </table>
+  `;
 
-  // Konfiguracja html2pdf
   const opt = {
-    margin:       [0.5, 0.5],        // marginesy w cm
+    margin:       [0.5, 0.5],
     filename:     "wycena_kuchni.pdf",
     image:        { type: "jpeg", quality: 0.98 },
-    html2canvas:  { scale: 2 },      // większa rozdziałka
+    html2canvas:  { scale: 2 },
     jsPDF:        { unit: "cm", format: "a4", orientation: "portrait" }
   };
+  html2pdf().set(opt).from(container).save();
+};
 
-  // Generujemy i pobieramy
-  html2pdf().set(opt).from(element).save();
 };
 
        
